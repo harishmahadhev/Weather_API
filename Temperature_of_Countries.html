@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Generate an API key with given link below https://openweathermap.org/guide Print the current Temperature data in console- By lat lang </h1>
+    <script>
+        var rq = new XMLHttpRequest();
+        rq.open('GET', 'https://restcountries.eu/rest/v2/all', true);
+        rq.send();
+        rq.onload = function() {
+            var country = JSON.parse(this.response);
+            for (var i in country) {
+                try {
+                    var cname = country[i].name;
+                    var latlong = country[i].latlng;
+                    //console.log(country[i].latlng)
+                    if (latlong == 0) throw new Error("Lattitude and longitude not found");
+                    weatherdata(cname, ...latlong)
+                } catch (e) {
+                    console.log("Invalid coordinates", e.message);
+                }
+            }
+        }
+        var weatherdata = function(name, lat, lng) {
+            var URL = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=990b57aad939792083acb4126d66bd28`;
+            var request = new XMLHttpRequest();
+            request.open('GET', URL, true);
+            request.send();
+            request.onload = function() {
+                var data = JSON.parse(this.response);
+                console.log(`${name}:${data.main.temp}`);
+
+            }
+        }
+    </script>
+</body>
+
+</html>
